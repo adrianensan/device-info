@@ -9,7 +9,7 @@ public enum Device: CustomStringConvertible, Equatable {
   case mac
   case unknown(identifier: String)
   
-  static let current = Device.determine()
+  public static let current = Device.determine()
   
   public var description: String {
     switch self {
