@@ -113,7 +113,7 @@ public enum Device: CustomStringConvertible, Equatable {
     }
   }
   
-  static var deviceModelIdentifier: String {
+  public static var deviceModelIdentifier: String {
     var systemInfo = utsname()
     uname(&systemInfo)
     let machineMirror = Mirror(reflecting: systemInfo.machine)
