@@ -1,15 +1,17 @@
 import CoreGraphics
+import Foundation
 
-public enum Device: CustomStringConvertible, Equatable {
+public indirect enum Device: CustomStringConvertible, Equatable {
   case iPhone(IPhoneModel)
   case iPad(IPadModel)
   case iPod(IPodModel)
   case appleTV(AppleTVModel)
   case watch
   case mac
+  case simulator(device: Device)
   case unknown(identifier: String)
   
-  public static let current = Device.determine()
+  public static let current = Device.infer(from: deviceModelIdentifier)
   
   public var description: String {
     switch self {
@@ -19,6 +21,7 @@ public enum Device: CustomStringConvertible, Equatable {
     case .appleTV(let model): return "AppleTV \(model.description)"
     case .watch: return "Watch"
     case .mac: return "Mac"
+    case .simulator(let simulatedDevice): return "Simulator (\(simulatedDevice.description)"
     case .unknown(let identifier): return "Unkown Device (\(identifier))"
     }
   }
@@ -29,6 +32,7 @@ public enum Device: CustomStringConvertible, Equatable {
       return [.x, .xs, .xsMax, ._11Pro, ._11ProMax, ._11, ._12mini, ._12, ._12Pro, ._12ProMax].contains(model)
     case .watch:
       return true
+    case .simulator(let simulatedDevice): return simulatedDevice.supportsTrueBlack
     default: return false
     }
   }
@@ -36,6 +40,7 @@ public enum Device: CustomStringConvertible, Equatable {
   public var supportsCellularConnections: Bool {
     switch self {
     case .iPhone: return true
+    case .simulator(let simulatedDevice): return simulatedDevice.supportsCellularConnections
     default: return false
     }
   }
@@ -46,6 +51,7 @@ public enum Device: CustomStringConvertible, Equatable {
       return [.se1].contains(model)
     case .iPod(let model):
       return [.iPod7].contains(model)
+    case .simulator(let simulatedDevice): return simulatedDevice.hasSmallScreen
     default: return false
     }
   }
@@ -69,6 +75,7 @@ public enum Device: CustomStringConvertible, Equatable {
     switch self {
     case .iPhone(_), .iPod(_):
       return true
+    case .simulator(let simulatedDevice): return simulatedDevice.tryBottomHeavy
     default: return false
     }
   }
@@ -79,6 +86,7 @@ public enum Device: CustomStringConvertible, Equatable {
       return [.se1, ._6s, ._6sPlus, ._7, ._7Plus].contains(model)
     case .iPod:
       return true
+    case .simulator(let simulatedDevice): return simulatedDevice.isSlow
     default: return false
     }
   }
@@ -95,6 +103,21 @@ public enum Device: CustomStringConvertible, Equatable {
     case .iPhone(._12), .iPhone(._12Pro): return 47
     case .iPhone(._12ProMax): return 53
     case .iPad(.air4), .iPad(.pro11Inch1), .iPad(.pro11Inch2), .iPad(.pro12Inch3), .iPad(.pro12Inch4): return 18
+    case .simulator(let simulatedDevice): return simulatedDevice.screenCornerRadius
+    default: return 0
+    }
+  }
+  
+  public var homeBarWidth: CGFloat {
+    switch self {
+    case .iPhone(.x), .iPhone(.xs), .iPhone(._11Pro): return 134
+    case .iPhone(.xsMax), .iPhone(._11ProMax): return 148
+    case .iPhone(._11), .iPhone(.xr): return 41.5
+    case .iPhone(._12mini): return 44
+    case .iPhone(._12), .iPhone(._12Pro): return 47
+    case .iPhone(._12ProMax): return 152
+    case .iPad(.air4), .iPad(.pro11Inch1), .iPad(.pro11Inch2), .iPad(.pro12Inch3), .iPad(.pro12Inch4): return 18
+    case .simulator(let simulatedDevice): return simulatedDevice.homeBarWidth
     default: return 0
     }
   }
@@ -110,6 +133,7 @@ public enum Device: CustomStringConvertible, Equatable {
     case .appleTV: return "appletv"
     case .mac: return "laptopcomputer"
     case .unknown: return "airplayaudio"
+    case .simulator(let simulatedDevice): return simulatedDevice.iconName
     }
   }
   
@@ -124,9 +148,7 @@ public enum Device: CustomStringConvertible, Equatable {
     return identifier
   }
   
-  static func determine() -> Device {
-    let id = deviceModelIdentifier
-    
+  static func infer(from id: String) -> Device {
     if id.hasPrefix(IPhoneModel.identifierPrefix) {
       return .iPhone(.inferFrom(modelNumber: id))
     } else if id.hasPrefix(IPadModel.identifierPrefix) {
@@ -135,8 +157,12 @@ public enum Device: CustomStringConvertible, Equatable {
       return .iPod(.inferFrom(modelNumber: id))
     } else if id.hasPrefix(AppleTVModel.identifierPrefix) {
       return .appleTV(.inferFrom(modelNumber: id))
-    } else if id.hasPrefix("x64_86") {
-      return .mac
+    } else if id.hasPrefix("x64_86") || id.hasPrefix("arm64") {
+      if let simulatorDeviceModel = ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] {
+        return .simulator(device: Device.infer(from: simulatorDeviceModel))
+      } else {
+        return .mac
+      }
     } else {
       return .unknown(identifier: id)
     }
