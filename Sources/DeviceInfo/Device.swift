@@ -21,7 +21,7 @@ public indirect enum Device: CustomStringConvertible, Equatable {
     case .appleTV(let model): return "AppleTV \(model.description)"
     case .watch: return "Watch"
     case .mac: return "Mac"
-    case .simulator(let simulatedDevice): return "Simulator (\(simulatedDevice.description)"
+    case .simulator(let simulatedDevice): return "Simulator (\(simulatedDevice.description))"
     case .unknown(let identifier): return "Unkown Device (\(identifier))"
     }
   }
