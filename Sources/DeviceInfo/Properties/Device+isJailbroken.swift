@@ -65,11 +65,15 @@ extension Device {
   }
   #endif
   
-  var isJailbroken: Bool {
+  public var isJailbroken: Bool {
     #if os(iOS)
-    containsSuspiciousApps() ||
-    isSuspiciousSystemPathsExists() ||
-    canEditSystemFiles()
+    if case .simulator = self {
+      return false
+    } else {
+      return containsSuspiciousApps()
+      || isSuspiciousSystemPathsExists()
+      || canEditSystemFiles()
+    }
     #else
     false
     #endif
