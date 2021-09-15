@@ -67,8 +67,8 @@ public enum IPadModel: CustomStringConvertible, Equatable {
     case "11,4", "11,5": return .air3
     case "11,6", "11,7": return ._8
     case "13,1", "13,2": return .air4
-    case "TODO": return ._9
-    case "TODO": return .mini6
+    case "12,2": return ._9
+    case "14,1": return .mini6
     default: return .unknown(modelNumber: modelNumber)
     }
   }
