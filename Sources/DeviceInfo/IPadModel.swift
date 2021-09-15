@@ -6,11 +6,13 @@ public enum IPadModel: CustomStringConvertible, Equatable {
   case _6
   case _7
   case _8
+  case _9
   case air2
   case air3
   case air4
   case mini4
   case mini5
+  case mini6
   case pro9Inch
   case pro10Inch
   case pro11Inch1
@@ -27,11 +29,13 @@ public enum IPadModel: CustomStringConvertible, Equatable {
     case ._6: return "(6th Generation)"
     case ._7: return "(7th Generation)"
     case ._8: return "(8th Generation)"
+    case ._9: return "(9th Generation)"
     case .air2: return "Air 2"
     case .air3: return "Air (3rd Generation)"
     case .air4: return "Air (4th Generation)"
     case .mini4: return "mini 4"
     case .mini5: return "mini (5th Generation)"
+    case .mini6: return "mini (6th Generation)"
     case .pro9Inch: return "Pro (9.7 inch)"
     case .pro10Inch: return "Pro (10.5 inch)"
     case .pro11Inch1: return "Pro (11 inch) (1st generation)"
@@ -63,6 +67,8 @@ public enum IPadModel: CustomStringConvertible, Equatable {
     case "11,4", "11,5": return .air3
     case "11,6", "11,7": return ._8
     case "13,1", "13,2": return .air4
+    case "TODO": return ._9
+    case "TODO": return .mini6
     default: return .unknown(modelNumber: modelNumber)
     }
   }

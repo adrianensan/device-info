@@ -13,6 +13,13 @@ public indirect enum Device: CustomStringConvertible, Equatable {
   
   public static let current = Device.infer(from: deviceModelIdentifier)
   
+  public static var currentEffective: Device {
+    switch current {
+    case .simulator(let simulatedDevice): return simulatedDevice
+    default: return current
+    }
+  }
+  
   public var description: String {
     switch self {
     case .iPhone(let model): return "iPhone \(model.description)"
@@ -29,7 +36,11 @@ public indirect enum Device: CustomStringConvertible, Equatable {
   public var supportsTrueBlack: Bool {
     switch self {
     case .iPhone(let model):
-      return [.x, .xs, .xsMax, ._11Pro, ._11ProMax, ._11, ._12mini, ._12, ._12Pro, ._12ProMax].contains(model)
+      return [
+        .x, .xs, .xsMax,
+        ._11Pro, ._11ProMax, ._11,
+        ._12mini, ._12, ._12Pro, ._12ProMax,
+        ._13mini, ._13, ._13Pro, ._13ProMax].contains(model)
     case .watch:
       return true
     case .simulator(let simulatedDevice): return simulatedDevice.supportsTrueBlack
@@ -97,12 +108,20 @@ public indirect enum Device: CustomStringConvertible, Equatable {
   
   public var screenCornerRadius: CGFloat {
     switch self {
-    case .iPhone(.x), .iPhone(.xs), .iPhone(.xsMax), .iPhone(._11Pro), .iPhone(._11ProMax): return 39
-    case .iPhone(._11), .iPhone(.xr): return 41.5
-    case .iPhone(._12mini): return 44
-    case .iPhone(._12), .iPhone(._12Pro): return 47
-    case .iPhone(._12ProMax): return 53
-    case .iPad(.air4), .iPad(.pro11Inch1), .iPad(.pro11Inch2), .iPad(.pro12Inch3), .iPad(.pro12Inch4): return 18
+    case .iPhone(let iPhoneModel):
+      switch iPhoneModel {
+      case .x, .xs, .xsMax, ._11Pro, ._11ProMax: return 39
+      case ._11, .xr: return 41.5
+      case ._12mini, ._13mini: return 44
+      case ._12, ._12Pro, ._13, ._13Pro: return 47
+      case ._12ProMax, ._13ProMax: return 53
+      default: return 0
+      }
+    case .iPad(let iPadModel):
+      switch iPadModel {
+      case .air4, .pro11Inch1, .pro11Inch2, .pro12Inch3, .pro12Inch4: return 18
+      default: return 0
+      }
     case .simulator(let simulatedDevice): return simulatedDevice.screenCornerRadius
     default: return 0
     }
@@ -110,14 +129,46 @@ public indirect enum Device: CustomStringConvertible, Equatable {
   
   public var homeBarWidth: CGFloat {
     switch self {
-    case .iPhone(.x), .iPhone(.xs), .iPhone(._11Pro): return 134
-    case .iPhone(.xsMax), .iPhone(._11ProMax): return 148
-    case .iPhone(._11), .iPhone(.xr): return 41.5
-    case .iPhone(._12mini): return 44
-    case .iPhone(._12), .iPhone(._12Pro): return 47
-    case .iPhone(._12ProMax): return 152
-    case .iPad(.air4), .iPad(.pro11Inch1), .iPad(.pro11Inch2), .iPad(.pro12Inch3), .iPad(.pro12Inch4): return 18
+    case .iPhone(let iPhoneModel):
+      switch iPhoneModel {
+      case .x, .xs, ._11Pro: return 134
+      case .xsMax, ._11ProMax: return 148
+      case ._11, .xr: return 134
+      case ._12mini, ._13mini: return 120
+      case ._12, ._12Pro, ._13, ._13Pro: return 134
+      case ._12ProMax, ._13ProMax: return 152
+      default: return 0
+      }
+    case .iPad(let iPadModel):
+      switch iPadModel {
+      case .air4, .pro11Inch1, .pro11Inch2, .pro12Inch3, .pro12Inch4: return 134
+      default: return 0
+      }
     case .simulator(let simulatedDevice): return simulatedDevice.homeBarWidth
+    default: return 0
+    }
+  }
+  
+  public var notchWidth: CGFloat {
+    switch self {
+    case .iPhone(let iPhoneModel):
+      switch iPhoneModel {
+      case .x, .xs, .xsMax: return 209
+      case ._11Pro, ._11ProMax: return 214
+      case ._11, .xr: return 220
+      case ._12mini: return 214
+      case ._12, ._12Pro: return 214
+      case ._12ProMax: return 214
+      case ._13, ._13Pro, ._13ProMax: return 160
+      case ._13mini: return 168
+      default: return 0
+      }
+    case .iPad(let iPadModel):
+      switch iPadModel {
+      case .air4, .pro11Inch1, .pro11Inch2, .pro12Inch3, .pro12Inch4: return 134
+      default: return 0
+      }
+    case .simulator(let simulatedDevice): return simulatedDevice.notchWidth
     default: return 0
     }
   }

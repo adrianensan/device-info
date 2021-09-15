@@ -18,7 +18,11 @@ public enum IPhoneModel: CustomStringConvertible, Equatable {
   case _12mini
   case _12
   case _12Pro
+  case _13mini
+  case _13
+  case _13Pro
   case _12ProMax
+  case _13ProMax
   case se1
   case se2
   case unknown(modelNumber: String)
@@ -42,6 +46,10 @@ public enum IPhoneModel: CustomStringConvertible, Equatable {
     case ._12: return "12"
     case ._12Pro: return "12 Pro"
     case ._12ProMax: return "12 Pro Max"
+    case ._13mini: return "13 mini"
+    case ._13: return "13"
+    case ._13Pro: return "13 Pro"
+    case ._13ProMax: return "13 Pro Max"
     case .se1: return "SE (2016)"
     case .se2: return "SE (2020)"
     case .unknown(let modelNumber): return "? (\(modelNumber))"
@@ -69,6 +77,10 @@ public enum IPhoneModel: CustomStringConvertible, Equatable {
     case "13,2": return ._12
     case "13,3": return ._12Pro
     case "13,4": return ._12ProMax
+    case "14,4": return ._13mini
+    case "14,5": return ._13
+    case "14,2": return ._13Pro
+    case "14,3": return ._13ProMax
     default: return .unknown(modelNumber: modelNumber)
     }
   }
