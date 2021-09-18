@@ -149,30 +149,6 @@ public indirect enum Device: CustomStringConvertible, Equatable {
     }
   }
   
-  public var notchWidth: CGFloat {
-    switch self {
-    case .iPhone(let iPhoneModel):
-      switch iPhoneModel {
-      case .x, .xs, .xsMax: return 209
-      case ._11Pro, ._11ProMax: return 214
-      case ._11, .xr: return 220
-      case ._12mini: return 214
-      case ._12, ._12Pro: return 214
-      case ._12ProMax: return 214
-      case ._13, ._13Pro, ._13ProMax: return 160
-      case ._13mini: return 168
-      default: return 0
-      }
-    case .iPad(let iPadModel):
-      switch iPadModel {
-      case .air4, .pro11Inch1, .pro11Inch2, .pro12Inch3, .pro12Inch4: return 134
-      default: return 0
-      }
-    case .simulator(let simulatedDevice): return simulatedDevice.notchWidth
-    default: return 0
-    }
-  }
-  
   public var iconName: String {
     switch self {
     case .iPhone:
