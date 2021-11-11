@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "DeviceInfo",
-    platforms: [.iOS(.v14), .macOS(.v11), .tvOS(.v14), .watchOS(.v7), .macCatalyst(.v14)],
+    platforms: [.iOS(.v15), .macOS(.v12), .tvOS(.v15), .watchOS(.v8), .macCatalyst(.v15)],
     products: [
         .library(
             name: "DeviceInfo",
@@ -13,7 +13,8 @@ let package = Package(
     targets: [
         .target(
             name: "DeviceInfo",
-            dependencies: []),
+            dependencies: [],
+            swiftSettings: [.define("APPLICATION_EXTENSION_API_ONLY")]),
         .testTarget(
             name: "DeviceInfoTests",
             dependencies: ["DeviceInfo"]),
