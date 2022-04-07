@@ -5,8 +5,8 @@ public indirect enum Device: CustomStringConvertible, Equatable {
   case iPhone(IPhoneModel)
   case iPad(IPadModel)
   case iPod(IPodModel)
+  case appleWatch(AppleWatchModel)
   case appleTV(AppleTVModel)
-  case watch
   case mac
   case simulator(device: Device)
   case unknown(identifier: String)
@@ -25,8 +25,8 @@ public indirect enum Device: CustomStringConvertible, Equatable {
     case .iPhone(let model): return "iPhone \(model.description)"
     case .iPad(let model): return "iPad \(model.description)"
     case .iPod(let model): return "iPod Touch \(model.description)"
+    case .appleWatch(let model): return "Watch \(model.description)"
     case .appleTV(let model): return "AppleTV \(model.description)"
-    case .watch: return "Watch"
     case .mac: return "Mac"
     case .simulator(let simulatedDevice): return "Simulator (\(simulatedDevice.description))"
     case .unknown(let identifier): return "Unkown Device (\(identifier))"
@@ -41,8 +41,7 @@ public indirect enum Device: CustomStringConvertible, Equatable {
         ._11Pro, ._11ProMax, ._11,
         ._12mini, ._12, ._12Pro, ._12ProMax,
         ._13mini, ._13, ._13Pro, ._13ProMax].contains(model)
-    case .watch:
-      return true
+    case .appleWatch: return true
     case .simulator(let simulatedDevice): return simulatedDevice.supportsTrueBlack
     default: return false
     }
@@ -97,6 +96,11 @@ public indirect enum Device: CustomStringConvertible, Equatable {
       return [.se1, ._6s, ._6sPlus, ._7, ._7Plus].contains(model)
     case .iPod:
       return true
+    case .appleWatch(let model):
+      switch model {
+      case .series3_38mm, .series3_42mm: return true
+      default: return false
+      }
     case .simulator(let simulatedDevice): return simulatedDevice.isSlow
     default: return false
     }
@@ -104,27 +108,6 @@ public indirect enum Device: CustomStringConvertible, Equatable {
   
   public var hasHomeButton: Bool {
     screenCornerRadius == 0
-  }
-  
-  public var screenCornerRadius: CGFloat {
-    switch self {
-    case .iPhone(let iPhoneModel):
-      switch iPhoneModel {
-      case .x, .xs, .xsMax, ._11Pro, ._11ProMax: return 39
-      case ._11, .xr: return 41.5
-      case ._12mini, ._13mini: return 44
-      case ._12, ._12Pro, ._13, ._13Pro: return 47
-      case ._12ProMax, ._13ProMax: return 53
-      default: return 0
-      }
-    case .iPad(let iPadModel):
-      switch iPadModel {
-      case .air4, .pro11Inch1, .pro11Inch2, .pro12Inch3, .pro12Inch4: return 18
-      default: return 0
-      }
-    case .simulator(let simulatedDevice): return simulatedDevice.screenCornerRadius
-    default: return 0
-    }
   }
   
   public var homeBarWidth: CGFloat {
@@ -141,7 +124,8 @@ public indirect enum Device: CustomStringConvertible, Equatable {
       }
     case .iPad(let iPadModel):
       switch iPadModel {
-      case .air4, .pro11Inch1, .pro11Inch2, .pro12Inch3, .pro12Inch4: return 134
+      case .air4, .pro11Inch1, .pro11Inch2, .pro11Inch3,
+          .pro12Inch3, .pro12Inch4, .pro12Inch5: return 134
       default: return 0
       }
     case .simulator(let simulatedDevice): return simulatedDevice.homeBarWidth
@@ -156,7 +140,7 @@ public indirect enum Device: CustomStringConvertible, Equatable {
     case .iPad:
       return screenCornerRadius > 0 ? "ipad" : "ipad.homebutton"
     case .iPod: return "ipodtouch"
-    case .watch: return "applewatch"
+    case .appleWatch: return "applewatch"
     case .appleTV: return "appletv"
     case .mac: return "laptopcomputer"
     case .unknown: return "airplayaudio"
@@ -182,6 +166,8 @@ public indirect enum Device: CustomStringConvertible, Equatable {
       return .iPad(.inferFrom(modelNumber: id))
     } else if id.hasPrefix(IPodModel.identifierPrefix) {
       return .iPod(.inferFrom(modelNumber: id))
+    } else if id.hasPrefix(AppleWatchModel.identifierPrefix) {
+      return .appleWatch(.inferFrom(modelNumber: id))
     } else if id.hasPrefix(AppleTVModel.identifierPrefix) {
       return .appleTV(.inferFrom(modelNumber: id))
     } else if id.hasPrefix("x64_86") || id.hasPrefix("arm64") {

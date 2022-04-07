@@ -7,20 +7,27 @@ public enum IPadModel: CustomStringConvertible, Equatable {
   case _7
   case _8
   case _9
+  
   case air2
   case air3
   case air4
+  
   case mini4
   case mini5
   case mini6
+  
   case pro9Inch
   case pro10Inch
   case pro11Inch1
   case pro11Inch2
+  case pro11Inch3
+  
   case pro12Inch1
   case pro12Inch2
   case pro12Inch3
   case pro12Inch4
+  case pro12Inch5
+  
   case unknown(modelNumber: String)
 
   public var description: String {
@@ -39,11 +46,13 @@ public enum IPadModel: CustomStringConvertible, Equatable {
     case .pro9Inch: return "Pro (9.7 inch)"
     case .pro10Inch: return "Pro (10.5 inch)"
     case .pro11Inch1: return "Pro (11 inch) (1st generation)"
-    case .pro11Inch2: return "Pro (11 inch) (2st generation)"
+    case .pro11Inch2: return "Pro (11 inch) (2nd generation)"
+    case .pro11Inch3: return "Pro (11 inch) (3rd generation)"
     case .pro12Inch1: return "Pro (12.9 inch) (1st generation)"
     case .pro12Inch2: return "Pro (12.9 inch) (2nd generation)"
     case .pro12Inch3: return "Pro (12.9 inch) (3rd generation)"
     case .pro12Inch4: return "Pro (12.9 inch) (4th generation)"
+    case .pro12Inch5: return "Pro (12.9 inch) (5th generation)"
     case .unknown(let modelNumber): return "? (\(modelNumber))"
     }
   }
@@ -68,6 +77,8 @@ public enum IPadModel: CustomStringConvertible, Equatable {
     case "11,6", "11,7": return ._8
     case "13,1", "13,2": return .air4
     case "12,2": return ._9
+    case "13,4", "13,5", "13,6", "13,7": return .pro11Inch3
+    case "13,8", "13,9", "13,10", "13,11": return .pro12Inch5
     case "14,1": return .mini6
     default: return .unknown(modelNumber: modelNumber)
     }

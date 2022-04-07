@@ -6,12 +6,14 @@ public enum AppleTVModel: CustomStringConvertible, Equatable {
 
   case tv
   case tv4K
+  case tv4K2
   case unknown(modelNumber: String)
 
   public var description: String {
     switch self {
-    case .tv: return "4"
+    case .tv: return "HD"
     case .tv4K: return "4k"
+    case .tv4K2: return "4k (2nd generation)"
     case .unknown(let modelNumber): return "? (\(modelNumber))"
     }
   }
@@ -20,6 +22,7 @@ public enum AppleTVModel: CustomStringConvertible, Equatable {
     switch modelNumber.replacingOccurrences(of: AppleTVModel.identifierPrefix, with: "") {
     case "5,3": return .tv
     case "6,2": return .tv4K
+    case "11,1": return .tv4K2
     default: return .unknown(modelNumber: modelNumber)
     }
   }

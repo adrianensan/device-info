@@ -1,16 +1,24 @@
 import Foundation
 
 public enum AppInfo {
-  public static let bundleID: String = Bundle.main.infoDictionary?["CFBundleIdentifier"] as? String ?? "?"
+  public static let bundleID: String = Bundle.main.bundleIdentifier ?? "?"
   public static let version: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
   public static let build: String = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
   public static let name: String = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "?"
+  public static let copyright: String = Bundle.main.infoDictionary?["NSHumanReadableCopyright"] as? String ?? "?"
   
   public static let isTestBuild = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
   
   public static var rootBundleID: String {
-    guard bundleID.hasSuffix(".widget") else { return bundleID }
-    return String(bundleID.dropLast(".widget".count))
+    if bundleID.hasSuffix(".widget") {
+      return String(bundleID.dropLast(7))
+    } else if bundleID.hasSuffix(".watchkitapp") {
+      return String(bundleID.dropLast(12))
+    } else if bundleID.hasSuffix(".watchkitapp.watchkitextension") {
+      return String(bundleID.dropLast(30))
+    } else {
+      return bundleID
+    }
   }
   public static var appGroup: String { "group.\(rootBundleID)" }
   public static var iCloudContainer: String { "iCloud.\(rootBundleID)" }
