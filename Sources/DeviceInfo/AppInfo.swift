@@ -5,6 +5,7 @@ public enum AppInfo {
   public static let version: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
   public static let build: String = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
   public static let name: String = Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "?"
+  public static let displayName: String = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? "?"
   public static let copyright: String = Bundle.main.infoDictionary?["NSHumanReadableCopyright"] as? String ?? "?"
   
   public static let isTestBuild = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
